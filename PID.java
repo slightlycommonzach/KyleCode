@@ -3,22 +3,20 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PID {
-    double p = 0;
-    double i = 0;
-    double d = 0;
-    double target = 0;
-    double integralStorage = 0;
-    double previousTime = 0;
+    private double p = 0.0;
+    private double i = 0.0;
+    private double d = 0.0;
+    double target = 0.0;
+    double integralStorage = 0.0;
+    double previousTime = 0.0;
     ElapsedTime time = new ElapsedTime();
-    double previousError = 0;
+    double previousError = 0.0;
 
     PID(double proportion, double integral, double derivative) {
         p = proportion;
         i = integral;
         d = derivative;
         time.reset();
-
-
     }
 
     public void setTarget(double target) {
@@ -38,5 +36,4 @@ public class PID {
         time.reset();
         return proportional+integralStorage+derivative;
     }
-
 }

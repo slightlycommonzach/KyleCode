@@ -12,12 +12,10 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
-
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMUCalibration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
 import java.math.BigDecimal;
 
 @TeleOp(name = "KyleDrive")
@@ -38,17 +36,24 @@ public class TestOpmode extends LinearOpMode {
     public void runOpMode() {
         final BigDecimal pi = new BigDecimal(Math.PI);
         final double power = 1;
+        //Drive Train
         lMotor = hardwareMap.get(DcMotor.class, "lMotor");
         rMotor = hardwareMap.get(DcMotor.class, "rMotor");
         frontMotor = hardwareMap.get(DcMotor.class, "frontMotor");
         backMotor = hardwareMap.get(DcMotor.class, "backMotor");
+        //Lifting Mechanism
         lArmMotor = hardwareMap.get(DcMotor.class, "lArmMotor");
         rArmMotor = hardwareMap.get(DcMotor.class, "rArmMotor");
         elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
+        // Inertial Measurement Unit
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-        // digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
-        // sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
-        // servoTest = hardwareMap.get(Servo.class, "servoTest");
+
+        //TODO: Setting Up Camera
+
+        //Hardware maps the DCS and Servo:
+        //digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+        //sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
+        //servoTest = hardwareMap.get(Servo.class, "servoTest");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -57,22 +62,20 @@ public class TestOpmode extends LinearOpMode {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
+
         lMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        // Wait for the game to start (driver presses PLAY)
         double cal = (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle) + (Math.PI / 2);
-
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-// run until the end of the match (driver presses STOP)
+        // Run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-//            if (gamepad1.right_bumper){
-//
-//            }
+//            if (gamepad1.right_bumper) {}
             telemetry.addData("Status", "Running");
             telemetry.update();
-            //   float theta = Math.sqrt(pi.multiply(imu.getAngularVelocityAxes());
+//            float theta = Math.sqrt(pi.multiply(imu.getAngularVelocityAxes());
             double gyroAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle - cal;
             double theta = (gyroAngle - Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y));
 //            double mag = Math.sqrt(Math.pow(gamepad1.left_stick_x,2)+ Math.pow(gamepad1.left_stick_y,2));
@@ -83,27 +86,12 @@ public class TestOpmode extends LinearOpMode {
             rMotor.setPower(Range.clip(mag * Math.sin(theta) + gamepad1.right_stick_x, -1, 1) * power);
             frontMotor.setPower(Range.clip(mag * Math.cos(theta) + gamepad1.right_stick_x, -1, 1) * power);
             backMotor.setPower(Range.clip(mag * Math.cos(theta) - gamepad1.right_stick_x, -1, 1) * power);
-// To make it not field oriented use this
-            //            lMotor.setPower(Range.clip(gamepad1.left_stick_y - gamepad1.right_stick_x, -1, 1) * power);
+            // To make it not field oriented use this:
+//            lMotor.setPower(Range.clip(gamepad1.left_stick_y - gamepad1.right_stick_x, -1, 1) * power);
 //            rMotor.setPower(Range.clip(gamepad1.left_stick_y + gamepad1.right_stick_x, -1, 1) * power);
 //            frontMotor.setPower(Range.clip(gamepad1.left_stick_x + gamepad1.right_stick_x, -1, 1) * power);
 //            backMotor.setPower(Range.clip(gamepad1.left_stick_x - gamepad1.right_stick_x, -1, 1) * power);
             telemetry.addData("Pos: ", lMotor.getCurrentPosition());
-
-
         }
     }
-
-    //    @Override
-//    public void loop() {
-//        telemetry.addData("Pos: ", lMotor.getCurrentPosition());
-//        lMotor.setPower(1);
-//        telemetry.update();
-//
-//    }
-   // fps MAX
-  //  RGB MAX
-   // ACTIVATE KILLMODE
-   // DOWNLOAD ALL
-   // RAM
 }
