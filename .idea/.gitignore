@@ -6,5 +6,5 @@
 /workspace.xml
 /KyleCode.iml
 /codeStyles/Project.xml
-.*
-!/.gitignore
+/.gitignore
+.idea/
